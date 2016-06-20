@@ -74,6 +74,7 @@ function izSetEnr() {
 }
 
 function sendEnrHit(a, b, c) {
+    console.log("Enrhit  , "+izGetStorage("iztoken"));
     var d = _izooto.unid;
     try {
         var f = document.createElement("img");
@@ -207,50 +208,51 @@ function izOpenDialog() {
     izSetStorage("izState", 2)
 }
 
-// function izInitialiseState() {
-//     "showNotification" in ServiceWorkerRegistration.prototype ? "denied" === Notification.permission ? _log("The user has blocked notifications.") : "PushManager" in window ? navigator.serviceWorker.ready.then(function(a) {
-//         a.pushManager.getSubscription().then(function(a) {
-//             a && sendSubscriptionToServer(a)
-//         })["catch"](function(a) {
-//             _log("Error during getSubscription()", a)
-//         })
-//     }) : _log("Push messaging is not supported.") : _log("Notifications are not supported.")
-// }
+function izInitialiseState() {
+    "showNotification" in ServiceWorkerRegistration.prototype ? "denied" === Notification.permission ? _log("The user has blocked notifications.") : "PushManager" in window ? navigator.serviceWorker.ready.then(function(a) {
+        a.pushManager.getSubscription().then(function(a) {
+            a && sendSubscriptionToServer(a)
+        })["catch"](function(a) {
+            _log("Error during getSubscription()", a)
+        })
+    }) : _log("Push messaging is not supported.") : _log("Notifications are not supported.")
+}
 
-// function izSubscribe() {
-//     navigator.serviceWorker.ready.then(function(a) {
-//         a.pushManager.subscribe({
-//             userVisibleOnly: !0
-//         }).then(function(a) {
-//             1 == _izooto.isFirefox && 1 != _izooto.ag && _log("Granted");
-//             return sendSubscriptionToServer(a)
-//         })["catch"](function(a) {
-//             "denied" === Notification.permission ? (1 == _izooto.isFirefox && 1 != izooto_glob.ad && ("default" != _izooto.subscriptionType || _izooto.isSubDomain ? _izooto.isSubDomain && self != top && izOnMessage("denied", "1", "parent") : sendEnrHit("denied", "1")), _log("Permission for Notification is denied")) :
-//                 _log("Unable to subscribe to push", a)
-//         })
-//     })
-// }
+function izSubscribe() {
+    navigator.serviceWorker.ready.then(function(a) {
+        a.pushManager.subscribe({
+            userVisibleOnly: !0
+        }).then(function(a) {
+            1 == _izooto.isFirefox && 1 != _izooto.ag && _log("Granted");
+            return sendSubscriptionToServer(a)
+        })["catch"](function(a) {
+            "denied" === Notification.permission ? (1 == _izooto.isFirefox && 1 != izooto_glob.ad && ("default" != _izooto.subscriptionType || _izooto.isSubDomain ? _izooto.isSubDomain && self != top && izOnMessage("denied", "1", "parent") : sendEnrHit("denied", "1")), _log("Permission for Notification is denied")) :
+                _log("Unable to subscribe to push", a)
+        })
+    })
+}
 
-// function sendSubscriptionToServer(a) {
-//     a = a.endpoint;
-//     var b = a.substring(40);
-//     1 == _izooto.isFirefox && (b = a.substring(47));
-//     if (0 == _izooto.bkeySent) {
-//         if ("default" != _izooto.subscriptionType || _izooto.isSubDomain)
-//             if (self == top && _izooto.isSubDomain) {
-//                 izOnMessage("bKey", b, "opener");
-//                 try {
-//                     document.getElementById("dynamic_iz").innerHTML = "Subscribed"
-//                 } catch (c) {}
-//                 izClosePopWindow()
-//             } else 1 == _izooto.ag ? izOnMessage("already_granted", 1, "parent", b) : !0;
-//         else 1 == _izooto.ag ? sendEnrHit("already_granted", "1", b) : sendEnrHit("allowed", "1",
-//             b);
-//         _izooto.bkeySent = 1
-//     }
-// }
+function sendSubscriptionToServer(a) {
+    a = a.endpoint;
+    var b = a.substring(40);
+    1 == _izooto.isFirefox && (b = a.substring(47));
+    if (0 == _izooto.bkeySent) {
+        if ("default" != _izooto.subscriptionType || _izooto.isSubDomain)
+            if (self == top && _izooto.isSubDomain) {
+                izOnMessage("bKey", b, "opener");
+                try {
+                    document.getElementById("dynamic_iz").innerHTML = "Subscribed"
+                } catch (c) {}
+                izClosePopWindow()
+            } else 1 == _izooto.ag ? izOnMessage("already_granted", 1, "parent", b) : !0;
+        else 1 == _izooto.ag ? sendEnrHit("already_granted", "1", b) : sendEnrHit("allowed", "1",
+            b);
+        _izooto.bkeySent = 1
+    }
+}
 
 function izSubFrame() {
+    console.log("IZsubframe  , "+izGetStorage("iztoken"));
     try {
         izFrame = document.createElement("IFRAME"), izFrame.setAttribute("src", _izooto.sourceOrigin + "?action=prompt"), izFrame.setAttribute("id", "izSubFrame"), izFrame.style.width = "0px", izFrame.style.height = "0px", izFrame.style.border = "0px", izFrame.setAttribute("visibility", "hidden"), izFrame.style.display = "none", null != document.body ? document.body.appendChild(izFrame) : document.head.appendChild(izFrame), _log("izSubFrame set")
     } catch (a) {
@@ -272,31 +274,31 @@ function izOpenPopup() {
         window.screenLeft ? window.screenLeft : screen.left)))
 }
 
-// function iZootoPushNotification(a, b) {
-//     if ("chrome" == a) try {
-//         navigator.permissions.query({
-//             name: "notifications"
-//         }).then(function(a) {
-//             "prompt" === a.state ? ("subDomain" === b ? (console.log("Prompted Http"), izOnMessage("prompted", 1, "parent"), Notification.requestPermission()) : "default" === b && (_log("Prompted Https"), sendEnrHit("prompted", 1)), a.onchange = function() {
-//                 "granted" === a.state ? "subDomain" === b ? (izOnMessage("allowed", 1, "parent"), _log("Granted")) : "default" === b && _log("Granted") : "denied" === a.state && ("subDomain" ===
-//                     b ? (izOnMessage("denied", 1, "parent"), _log("Denied"), izClosePopWindow()) : "default" === b && sendEnrHit("denied", 1))
-//             }) : "granted" === a.state ? (_izooto.ag = 1, "subDomain" === b && _log("ag")) : "denied" === a.state && "subDomain" === b && izClosePopWindow()
-//         })
-//     } catch (c) {
-//         log("Unable to read notification permissions")
-//     } else "firefox" == a && ("Notification" in window ? "default" === Notification.permission ? "subDomain" === b ? (console.log("Prompted Http"), izOnMessage("prompted", 1, "parent"), Notification.requestPermission().then(function(a) {
-//         "granted" ==
-//         a && izOnMessage("allowed", 1, "parent")
-//     })) : sendEnrHit("prompted", 1) : "granted" === Notification.permission ? (_izooto.ag = 1, _log("ag_cc")) : "denied" === Notification.permission && (izClosePopWindow(), _log("ad")) : _log("This browser does not support desktop notification"));
-//     try {
-//         izSubscribe()
-//     } catch (c) {
-//         _log("Unable To Subscribe")
-//     }
-//     "serviceWorker" in navigator ? navigator.serviceWorker.register(_izooto.serviceWorker).then(izInitialiseState)["catch"](function(a) {
-//         _log(a)
-//     }) : _log("Service workers are not supported in this browser.")
-// }
+function iZootoPushNotification(a, b) {
+    if ("chrome" == a) try {
+        navigator.permissions.query({
+            name: "notifications"
+        }).then(function(a) {
+            "prompt" === a.state ? ("subDomain" === b ? (console.log("Prompted Http 1"), izOnMessage("prompted", 1, "parent"), Notification.requestPermission()) : "default" === b && (_log("Prompted Https"), sendEnrHit("prompted", 1)), a.onchange = function() {
+                "granted" === a.state ? "subDomain" === b ? (izOnMessage("allowed", 1, "parent"), _log("Granted")) : "default" === b && _log("Granted") : "denied" === a.state && ("subDomain" ===
+                    b ? (izOnMessage("denied", 1, "parent"), _log("Denied"), izClosePopWindow()) : "default" === b && sendEnrHit("denied", 1))
+            }) : "granted" === a.state ? (_izooto.ag = 1, "subDomain" === b && _log("ag")) : "denied" === a.state && "subDomain" === b && izClosePopWindow()
+        })
+    } catch (c) {
+        log("Unable to read notification permissions")
+    } else "firefox" == a && ("Notification" in window ? "default" === Notification.permission ? "subDomain" === b ? (console.log("Prompted Http 2"), izOnMessage("prompted", 1, "parent"), Notification.requestPermission().then(function(a) {
+        "granted" ==
+        a && izOnMessage("allowed", 1, "parent")
+    })) : sendEnrHit("prompted", 1) : "granted" === Notification.permission ? (_izooto.ag = 1, _log("ag_cc")) : "denied" === Notification.permission && (izClosePopWindow(), _log("ad")) : _log("This browser does not support desktop notification"));
+    try {
+        izSubscribe()
+    } catch (c) {
+        _log("Unable To Subscribe")
+    }
+    "serviceWorker" in navigator ? navigator.serviceWorker.register(_izooto.serviceWorker).then(izInitialiseState)["catch"](function(a) {
+        _log(a)
+    }) : _log("Service workers are not supported in this browser.")
+}
 
 function izOnMessage(a, b, c, d) {
     "parent" === c ? (a = void 0 === d ? {
@@ -317,12 +319,15 @@ function izOnMessage(a, b, c, d) {
 }
 
 function izootoSubscriber(a) {
+    console.log("htt  , "+_izooto.locationProtocol)
     if ("http:" === _izooto.locationProtocol) {
         if ("" != izGetStorage("iztoken")) {
+            console.log("aaa  , "+izGetStorage("iztoken"));
             sendEnrHit("already_granted", 1, izGetStorage("iztoken"));
             return
         }
         window.onmessage = function(a) {
+            console.log("bbb  , "+izGetStorage("iztoken")+" , a: "+JSON.stringify(a));
             -1 < _izooto.sourceOrigin.indexOf(a.origin) && a.data && (a = JSON.parse(a.data), "allowed" == a.k ? (izOpenDialog(), izSetStorage("izState", 1), izSetStorage("izid", _izooto.unid), sendEnrHit(a.k, a.v)) : void 0 != a.bkey ? (izSetStorage("iztoken", a.bkey), sendEnrHit(a.k, a.v, a.bkey)) : "popclose" == a.k ? izSetStorage("izState", 3) : ("bKey" ==
                 a.k && izSetStorage("iztoken", a.v), sendEnrHit(a.k, a.v)))
         };
@@ -331,29 +336,29 @@ function izootoSubscriber(a) {
         izGetStorage("iztoken");
         izSubFrame()
     }
-    // if (1 === _izooto.isSubDomain && "https:" == _izooto.locationProtocol) {
-    //     try {
-    //         var b = _izooto.manifest,
-    //             c = document.getElementsByTagName("head")[0],
-    //             d = document.createElement("link");
-    //         d.rel = "manifest";
-    //         d.href = b;
-    //         c.appendChild(d);
-    //         _log("manifest")
-    //     } catch (f) {}
-    //     setTimeout(function() {
-    //         izClosePopWindow()
-    //     }, 1E4);
-    //     _izooto.subscriptionType = "subDomain";
-    //     iZootoPushNotification(a, _izooto.subscriptionType)
-    // } else if ("https:" ==
-    //     _izooto.locationProtocol) {
-    //     try {
-    //         b = _izooto.manifest, c = document.getElementsByTagName("head")[0], d = document.createElement("link"), d.rel = "manifest", d.href = b, c.appendChild(d), _log("manifest")
-    //     } catch (f) {}
-    //     _izooto.subscriptionType = "default";
-    //     iZootoPushNotification(a, _izooto.subscriptionType)
-    // }
+    if (1 === _izooto.isSubDomain && "https:" == _izooto.locationProtocol) {
+        try {
+            var b = _izooto.manifest,
+                c = document.getElementsByTagName("head")[0],
+                d = document.createElement("link");
+            d.rel = "manifest";
+            d.href = b;
+            c.appendChild(d);
+            _log("manifest")
+        } catch (f) {}
+        setTimeout(function() {
+            izClosePopWindow()
+        }, 1E4);
+        _izooto.subscriptionType = "subDomain";
+        iZootoPushNotification(a, _izooto.subscriptionType)
+    } else if ("https:" ==
+        _izooto.locationProtocol) {
+        try {
+            b = _izooto.manifest, c = document.getElementsByTagName("head")[0], d = document.createElement("link"), d.rel = "manifest", d.href = b, c.appendChild(d), _log("manifest")
+        } catch (f) {}
+        _izooto.subscriptionType = "default";
+        iZootoPushNotification(a, _izooto.subscriptionType)
+    }
 }
 
 function initIzooto() {
