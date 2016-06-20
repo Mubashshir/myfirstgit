@@ -67,7 +67,14 @@ function _log(a) {
 
 function izSetEnr() {
     try {
-        iframe = document.createElement("IFRAME"), iframe.setAttribute("src", _izooto.setEnrUrl + "?s=1&pid=" + _izooto.client + "&izid=" + _izooto.unid + "&btype=" + _izooto.browser + "&dtype=" + _izooto.deviceType), iframe.style.width = "0px", iframe.style.height = "0px", iframe.style.border = "0px", iframe.setAttribute("visibility", "hidden"), iframe.style.display = "none", null != document.body ? document.body.appendChild(iframe) : document.head.appendChild(iframe)
+        iframe = document.createElement("IFRAME"), 
+        iframe.setAttribute("src", _izooto.setEnrUrl + "?s=1&pid=" + _izooto.client + "&izid=" + _izooto.unid + "&btype=" + _izooto.browser + "&dtype=" + _izooto.deviceType), 
+        iframe.style.width = "0px", 
+        iframe.style.height = "0px", 
+        iframe.style.border = "0px", 
+        iframe.setAttribute("visibility", "hidden"), 
+        iframe.style.display = "none", 
+        null != document.body ? document.body.appendChild(iframe) : document.head.appendChild(iframe)
     } catch (a) {
         _log("izooto:: unable to set ENR " + a)
     }
@@ -254,7 +261,15 @@ function sendSubscriptionToServer(a) {
 function izSubFrame() {
     console.log("IZsubframe  , "+izGetStorage("iztoken"));
     try {
-        izFrame = document.createElement("IFRAME"), izFrame.setAttribute("src", _izooto.sourceOrigin + "?action=prompt"), izFrame.setAttribute("id", "izSubFrame"), izFrame.style.width = "0px", izFrame.style.height = "0px", izFrame.style.border = "0px", izFrame.setAttribute("visibility", "hidden"), izFrame.style.display = "none", null != document.body ? document.body.appendChild(izFrame) : document.head.appendChild(izFrame), _log("izSubFrame set")
+        izFrame = document.createElement("IFRAME"), 
+        izFrame.setAttribute("src", _izooto.sourceOrigin + "?action=prompt"), 
+        izFrame.setAttribute("id", "izSubFrame"), 
+        izFrame.style.width = "0px", 
+        izFrame.style.height = "0px", 
+        izFrame.style.border = "0px", 
+        izFrame.setAttribute("visibility", "hidden"), 
+        izFrame.style.display = "none", null != document.body ? document.body.appendChild(izFrame) : document.head.appendChild(izFrame), 
+        _log("izSubFrame set")
     } catch (a) {
         _log("izooto:: unable to subFrame" + a)
     }
