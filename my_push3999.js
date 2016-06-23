@@ -41,7 +41,7 @@ var user_subscription={
        // If its denied, it's a permanent block until the user changes the permission
        if (Notification.permission === 'denied') {
            console.warn('The user has blocked notifications.');
-           callBackToSite(); 
+           
            return;
        }
  
@@ -55,8 +55,7 @@ var user_subscription={
        navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {           
            serviceWorkerRegistration.pushManager.getSubscription()
             .then(function(subscription) {
-                 if (subscription) {  
-                    callBackToSite();                
+                 if (subscription) {                                   
                     console.log("first sub : "+JSON.stringify(subscription));   
                     // console.log(subscription.getKey('p256dh')+ " , p256dh");     
                     return ;
@@ -70,8 +69,7 @@ var user_subscription={
                             sendSubscriptionIdToServer(subscription);
                         })
                         .catch(function(err) {
-                            console.warn('Error during getSubscription()', err);
-                            callBackToSite(); 
+                            console.warn('Error during getSubscription()', err);                           
                         });
                  }
             });
@@ -171,7 +169,7 @@ var user_subscription={
                 }
             }           
             xmlhttp.send(JSON.stringify(user_data));
-             callBackToSite(); 
+             
        }
       
        
