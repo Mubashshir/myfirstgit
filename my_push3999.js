@@ -1,6 +1,4 @@
-
-
-var website_id= "38";
+var website_id=  "188" ;
 
 var user_location={
     country:'',
@@ -20,13 +18,16 @@ var user_subscription={
     auth:''
 }
 
-if ('serviceWorker' in navigator) {
-  console.log('Service Worker is supported');
-  navigator.serviceWorker.register('my_worker.js').then(initialiseState);
-}
-else {
-    console.warn('Service workers aren\'t supported in this browser.');
-}
+
+
+    if ('serviceWorker' in navigator) {
+      console.log('Service Worker is supported');
+      navigator.serviceWorker.register('my_worker3999.js').then(initialiseState);
+    }
+    else {
+        console.warn('Service workers aren\'t supported in this browser.');
+    }
+
 
 // Once the service worker is registered set the initial state
    function initialiseState() {
@@ -40,6 +41,7 @@ else {
        // If its denied, it's a permanent block until the user changes the permission
        if (Notification.permission === 'denied') {
            console.warn('The user has blocked notifications.');
+           callBackToSite(); 
            return;
        }
  
@@ -53,20 +55,23 @@ else {
        navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {           
            serviceWorkerRegistration.pushManager.getSubscription()
             .then(function(subscription) {
-                 if (subscription) {                   
-                    // console.log(JSON.stringify(subscription));   
+                 if (subscription) {  
+                    callBackToSite();                
+                    console.log("first sub : "+JSON.stringify(subscription));   
                     // console.log(subscription.getKey('p256dh')+ " , p256dh");     
                     return ;
                  }
                  else{
                      serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true}).then(function(subscription) {
                             if (!subscription) {
+                                console.log("second sub")
                                 return;
                             }                           
                             sendSubscriptionIdToServer(subscription);
                         })
                         .catch(function(err) {
                             console.warn('Error during getSubscription()', err);
+                            callBackToSite(); 
                         });
                  }
             });
@@ -75,7 +80,7 @@ else {
    }
 
    function sendSubscriptionIdToServer(subscription){     
-          
+          console.log("server sub")  
        var device_detail=getDeviceDetail(); 
        
        if(device_detail.OS.indexOf(' ')==-1){
@@ -166,7 +171,7 @@ else {
                 }
             }           
             xmlhttp.send(JSON.stringify(user_data));
-            
+             callBackToSite(); 
        }
       
        
